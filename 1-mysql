@@ -1,0 +1,8 @@
+wget https://repo.mysql.com//mysql-apt-config_0.8.32-1_all.deb
+sudo apt install ./mysql-apt-config_0.8.32-1_all.deb
+sudo apt update
+sudo apt install mysql-server
+mysql -uroot -p
+CREATE USER 'user' IDENTIFIED BY 'User@123';
+CREATE DATABASE user;
+GRANT ALL PRIVILEGES ON  *.* TO user@'%' WITH GRANT OPTION;
