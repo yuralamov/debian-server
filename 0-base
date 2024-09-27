@@ -1,0 +1,16 @@
+# sudo dpkg-reconfigure locales
+sudo dpkg-reconfigure console-setup
+sudo dpkg-reconfigure keyboard-configuration
+sudo reboot
+sudo nano /etc/apt/sources.list
+-------------------------------
+deb http://deb.debian.org/debian/ bookworm main contrib non-free non-free-firmware
+deb-src http://deb.debian.org/debian/ bookworm main contrib non-free non-free-firmware
+deb http://security.debian.org/debian-security bookworm-security main contrib non-free non-free-firmware
+deb-src http://security.debian.org/debian-security bookworm-security main contrib non-free non-free-firmware
+deb http://deb.debian.org/debian/ bookworm-updates main contrib non-free non-free-firmware
+deb-src http://deb.debian.org/debian/ bookworm-updates main contrib non-free non-free-firmware
+-------------------------------
+sudo apt update
+sudo apt install mc ssh curl wget git aptitude htop iftop nmon \
+  apt-transport-https ca-certificates gnupg-agent software-properties-common
