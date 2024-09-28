@@ -111,3 +111,4 @@ tech/tech technical account,
 normal/normal “normal” account,
 post-only/postonly post-only account.
 
+sudo tar xvjf glpi-genericobject-2.14.10.tar.bz2 -C /var/www/glpi/plugins/
