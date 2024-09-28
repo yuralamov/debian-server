@@ -1,0 +1,36 @@
+sudo apt install tar wget chrony
+sudo timedatectl set-timezone Europe/Moscow
+sudo a2enmod rewrite
+sudo systemctl restart apache2
+sudo apt install php-dom php-fileinfo php-simplexml php-xmlreader php-xmlwriter php-curl php-intl php-mysqli php-bz2 php-zip bzip2
+php-pear-CAS php-opcache php-apcu php-xmlrpc php-sodium
+sudo nano /etc/php/8.2/apache2/php.ini
+upload_max_filesize = 256M
+...
+post_max_size = 256M
+...
+date.timezone = "Europe/Moscow"
+...
+session.cookie_httponly = on
+sudo nano /etc/apache2/sites-enabled/glpi.conf
+<VirtualHost *:8080>
+    Define root_domain glpi.dmosk.local
+    Define root_path /var/www/glpi
+
+    ServerName ${root_domain}
+    DocumentRoot ${root_path}
+</VirtualHost>
+
+mkdir -p /var/www/glpi
+mysql -u root -p
+CREATE DATABASE glpi DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
+CREATE USER 'glpi'@'localhost' IDENTIFIED BY 'Glpi@123';
+GRANT ALL PRIVILEGES ON glpi.* TO glpi@localhost;
+FLUSH PRIVILEGES;
+wget https://github.com/glpi-project/glpi/releases/download/10.0.16/glpi-10.0.16.tgz
+tar -xzf glpi-*.tgz -C /var/www/glpi --strip-components 1
+chown -R www-data:www-data /var/www/glpi
+Настройка из веб
+sudo rm -f /var/www/glpi/install/install.php
+crontab -e
+* * * * * /usr/bin/php /var/www/glpi/front/cron.php &>/dev/null
