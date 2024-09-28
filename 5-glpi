@@ -87,6 +87,7 @@ ErrorDocument 403 "<p><b>Restricted area.</b><br />Only local access allowed.<br
 sudo cp -R /var/www/glpi/files/ /var/lib/glpi
 sudo cp -R /var/www/glpi/config /etc/glpi
 sudo chown -R www-data:www-data /var/www/glpi/,/etc/glpi/ /var/lib/glpi/ /var/log/glpi/
+sudo usermod -aG www-data $USER
 sudo a2dissite 000-default
 sudo a2ensite glpi
 sudo systemctl reload apache2
