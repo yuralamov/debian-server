@@ -1,4 +1,6 @@
-
+wget https://repo.zabbix.com/zabbix/7.0/debian/pool/main/z/zabbix-release/zabbix-release_7.0-2+debian12_all.deb
+sudo dpkg -i zabbix-release_7.0-2+debian12_all.deb
+sudo apt update && sudo apt upgrade -y
 sudo apt-get install php libapache2-mod-php php-mcrypt php-mysql
 sudo nano /etc/apache2/mods-enabled/dir.conf
 <IfModule mod_dir.c>
@@ -38,3 +40,4 @@ sudo apt install php-gd php-bcmath php-mbstring php-xml php-ldap php-json
 
 sudo systemctl restart zabbix-server zabbix-agent apache2
 sudo systemctl enable zabbix-server zabbix-agent apache2
+sudo apt update && sudo apt upgrade -y
