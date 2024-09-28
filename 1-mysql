@@ -8,3 +8,4 @@ CREATE DATABASE user;
 GRANT ALL PRIVILEGES ON  *.* TO user@'%' WITH GRANT OPTION;
 mysql > SHOW DATABASES;
 mysql > FLUSH PRIVILEGES;
+mysql > SET GLOBAL time_zone = 'Europe/Moscow';
