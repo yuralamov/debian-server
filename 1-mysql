@@ -1,6 +1,5 @@
 wget https://repo.mysql.com//mysql-apt-config_0.8.32-1_all.deb
-sudo apt install ./mysql-apt-config_0.8.32-1_all.deb
-sudo apt update
+sudo apt install ./mysql-apt-config_0.8.32-1_all.deb && sudo apt update
 sudo apt install mysql-server
 sudo systemctl status mysql
 mysql -uroot -p
