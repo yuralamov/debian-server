@@ -1,6 +1,6 @@
 sudo apt install tar wget chrony
 sudo timedatectl set-timezone Europe/Moscow
-sudo apt install php-dom php-fileinfo php-simplexml php-xmlreader php-xmlwriter php-curl php-intl php-mysqli php-bz2 php-zip bzip2 php-pear php-apcu php-xmlrpc
+sudo apt install php php-gd php-ldap php-mbstring php-dom php-fileinfo php-simplexml php-xmlreader php-xmlwriter php-curl php-intl php-mysqli php-bz2 php-zip bzip2 php-pear php-apcu php-xmlrpc
 sudo nano /etc/php/8.2/apache2/php.ini
 upload_max_filesize = 256M
 ...
@@ -11,6 +11,9 @@ date.timezone = "Europe/Moscow"
 session.cookie_httponly = on
 
 sudo mkdir -p /var/www/glpi
+sudo mkdir -p /etc/glpi
+sudo mkdir -p /var/log/glpi
+sudo mkdir -p /var/lib/glpi/
 mysql -u root -p
 CREATE DATABASE glpi DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
 CREATE USER 'glpi'@'localhost' IDENTIFIED BY 'Glpi@123';
@@ -18,41 +21,86 @@ GRANT ALL PRIVILEGES ON glpi.* TO glpi@localhost;
 FLUSH PRIVILEGES;
 wget https://github.com/glpi-project/glpi/releases/download/10.0.16/glpi-10.0.16.tgz
 sudo tar -xzf glpi-*.tgz -C /var/www/glpi --strip-components 1
-sudo chown -R www-data:www-data /var/www/glpi/
-sudo chown -R www-data:www-data /etc/glpi/
-sudo chown -R www-data:www-data /var/lib/glpi/
-sudo mkdir -p /var/log/glpi/
-sudo chown -R www-data:www-data /var/log/glpi/
-sudo nano /etc/glpi/local_define.php
 sudo nano /var/www/glpi/install/.htaccess
+---
+# /var/www/glpi/.htaccess
+RewriteBase /
+RewriteEngine On
+RewriteCond %{REQUEST_URI} !^/public
+RewriteRule ^(.*)$ public/index.php [QSA,L]
+---
 sudo nano /etc/apache2/sites-available/glpi.conf
 ---
-<VirtualHost *:8080>
-    Define root_domain glpi.workgroup
-    Define root_path /var/www/glpi
+<VirtualHost *:80>
+    ServerName glpi.localhost
 
-    ServerName ${root_domain}
-    DocumentRoot ${root_path}
+    DocumentRoot /var/www/glpi/public
+
+    # If you want to place GLPI in a subfolder of your site (e.g. your virtual host is serving multiple applications),
+    # you can use an Alias directive. If you do this, the DocumentRoot directive MUST NOT target the GLPI directory itself.
+    # Alias "/glpi" "/var/www/glpi/public"
+
+    <Directory /var/www/glpi/public>
+        Require all granted
+
+        RewriteEngine On
+
+        # Ensure authorization headers are passed to PHP.
+        # Some Apache configurations may filter them and break usage of API, CalDAV, ...
+        RewriteCond %{HTTP:Authorization} ^(.+)$
+        RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+        # Redirect all requests to GLPI router, unless file exists.
+        RewriteCond %{REQUEST_FILENAME} !-f
+        RewriteRule ^(.*)$ index.php [QSA,L]
+    </Directory>
 </VirtualHost>
 ---
-<VirtualHost *:8080>
-  ServerName glpi.workgroup
-  DocumentRoot /var/www/glpi
-  <Directory /var/www/glpi>
-    Options Indexes FollowSymLinks MultiViews
-    AllowOverride All
-    Order allow,deny
-    allow from all
-    AuthType Basic
-  </Directory>
-  LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-agent}i\"" combined
-  CustomLog ${APACHE_LOG_DIR}/glpi_access.log combined
-  ErrorLog ${APACHE_LOG_DIR}/glpi_error.log
-</VirtualHost>
+sudo nano /var/www/glpi/downstream.php
 ---
+<?php
+define('GLPI_CONFIG_DIR', '/etc/glpi/');
+
+if (file_exists(GLPI_CONFIG_DIR . '/local_define.php')) {
+   require_once GLPI_CONFIG_DIR . '/local_define.php';
+}
+---
+sudo nano /etc/glpi/local_define.php
+---
+<?php
+define('GLPI_VAR_DIR', '/var/lib/glpi');
+define('GLPI_LOG_DIR', '/var/log/glpi');
+---
+sudo nano /var/www/glpi/install/.htaccess
+---
+<IfModule mod_authz_core.c>
+    Require local
+</IfModule>
+<IfModule !mod_authz_core.c>
+    order deny, allow
+    deny from all
+    allow from 127.0.0.1
+    allow from ::1
+</IfModule>
+ErrorDocument 403 "<p><b>Restricted area.</b><br />Only local access allowed.<br />Check your configuration or contact your administrator.</p>"
+---
+sudo cp -R /var/www/glpi/files/ /var/lib/glpi
+sudo cp -R /var/www/glpi/config /etc/glpi
+sudo chown -R www-data:www-data /var/www/glpi/,/etc/glpi/ /var/lib/glpi/ /var/log/glpi/
+sudo a2dissite 000-default
 sudo a2ensite glpi
-sudo service apache2 reload
+sudo systemctl reload apache2
 Настройка из веб
-sudo rm -f /var/www/glpi/install/install.php
-crontab -e
-* * * * * /usr/bin/php /var/www/glpi/front/cron.php &>/dev/null
+sudo nano /var/www/glpi/install/.htaccess
+---
+<IfModule mod_authz_core.c>
+    Require local
+</IfModule>
+<IfModule !mod_authz_core.c>
+    order deny, allow
+    deny from all
+    allow from 127.0.0.1
+    allow from ::1
+</IfModule>
+ErrorDocument 403 "<p><b>Restricted area.</b><br />Only local access allowed.<br />Check your configuration or contact your administrator.</p>"
+---
