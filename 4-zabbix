@@ -11,7 +11,7 @@ sudo nano /var/www/html/info.php
 <?php
 phpinfo();
 ?>
-sudo apt install zabbix-server-mysql zabbix-frontend-php zabbix-apache-conf zabbix-sql-scripts zabbix-agent
+sudo apt install zabbix-server-mysql zabbix-frontend-php zabbix-apache-conf zabbix-sql-scripts zabbix-agent php-zip
 mysql -uroot -p
 mysql> create database zabbix character set utf8mb4 collate utf8mb4_bin;
 mysql> create user zabbix@localhost identified by 'Zabbix@123';
