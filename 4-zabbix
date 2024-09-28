@@ -1,1 +1,13 @@
 
+sudo apt-get install php libapache2-mod-php php-mcrypt php-mysql
+sudo nano /etc/apache2/mods-enabled/dir.conf
+<IfModule mod_dir.c>
+    DirectoryIndex index.php ....
+</IfModule>
+sudo systemctl restart apache2
+sudo systemctl status apache2
+sudo apt-get install php-cli
+sudo nano /var/www/html/info.php
+<?php
+phpinfo();
+?>
