@@ -1,5 +1,14 @@
 sudo ufw status verbose
 sudo ufw app list
+sudo ufw status numbered
+sudo ufw app info all
+-
+sudo nano /etc/ufw/applications.d/mysql
+[MySQL]
+title=Cross-platform MySQL Server
+description=Very fast, multithreaded, multi-user, and robust SQL database server
+ports=3306
+sudo ufw allow MySQL && sudo ufw reload && sudo ufw status verbose
 -
 sudo ufw app info "WWW Full"
 sudo ufw allow in "WWW Full"
