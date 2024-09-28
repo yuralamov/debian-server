@@ -24,5 +24,15 @@ mysql> set global log_bin_trust_function_creators = 0;
 mysql> quit;
 sudo nano /etc/zabbix/zabbix_server.conf
 DBPassword=Zabbix@123
+sudo nano /etc/apache2/conf-enabled/zabbix.conf
+php_value max_execution_time 300
+php_value memory_limit 128M
+php_value post_max_size 16M
+php_value upload_max_filesize 2M
+php_value max_input_time 300
+php_value max_input_vars 10000
+php_value always_populate_raw_post_data -1
+php_value date.timezone Europe/Moscow
+
 sudo systemctl restart zabbix-server zabbix-agent apache2
 sudo systemctl enable zabbix-server zabbix-agent apache2
