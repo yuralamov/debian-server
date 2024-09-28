@@ -12,5 +12,5 @@ deb http://deb.debian.org/debian/ bookworm-updates main contrib non-free non-fre
 deb-src http://deb.debian.org/debian/ bookworm-updates main contrib non-free non-free-firmware
 -------------------------------
 sudo apt update
-sudo apt install mc ssh curl wget git aptitude htop iftop nmon \
-  apt-transport-https ca-certificates gnupg-agent software-properties-common
+sudo apt install mc ssh curl wget git aptitude htop iftop nmon unrar unzip mc ssh fail2ban \
+  apt-transport-https ca-certificates gnupg-agent software-properties-common ufw tree
