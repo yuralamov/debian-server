@@ -33,6 +33,8 @@ php_value max_input_time 300
 php_value max_input_vars 10000
 php_value always_populate_raw_post_data -1
 php_value date.timezone Europe/Moscow
+sudo apt install zabbix-java-gateway
+sudo apt install php-gd php-bcmath php-mbstring php-xml php-ldap php-json
 
 sudo systemctl restart zabbix-server zabbix-agent apache2
 sudo systemctl enable zabbix-server zabbix-agent apache2
