@@ -1,9 +1,6 @@
 sudo apt install tar wget chrony
 sudo timedatectl set-timezone Europe/Moscow
-sudo a2enmod rewrite
-sudo systemctl restart apache2
-sudo apt install php-dom php-fileinfo php-simplexml php-xmlreader php-xmlwriter php-curl php-intl php-mysqli php-bz2 php-zip bzip2
-php-pear-CAS php-opcache php-apcu php-xmlrpc php-sodium
+sudo apt install php-dom php-fileinfo php-simplexml php-xmlreader php-xmlwriter php-curl php-intl php-mysqli php-bz2 php-zip bzip2 php-pear php-apcu php-xmlrpc
 sudo nano /etc/php/8.2/apache2/php.ini
 upload_max_filesize = 256M
 ...
@@ -12,24 +9,49 @@ post_max_size = 256M
 date.timezone = "Europe/Moscow"
 ...
 session.cookie_httponly = on
-sudo nano /etc/apache2/sites-enabled/glpi.conf
-<VirtualHost *:8080>
-    Define root_domain glpi.dmosk.local
-    Define root_path /var/www/glpi
 
-    ServerName ${root_domain}
-    DocumentRoot ${root_path}
-</VirtualHost>
-
-mkdir -p /var/www/glpi
+sudo mkdir -p /var/www/glpi
 mysql -u root -p
 CREATE DATABASE glpi DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
 CREATE USER 'glpi'@'localhost' IDENTIFIED BY 'Glpi@123';
 GRANT ALL PRIVILEGES ON glpi.* TO glpi@localhost;
 FLUSH PRIVILEGES;
 wget https://github.com/glpi-project/glpi/releases/download/10.0.16/glpi-10.0.16.tgz
-tar -xzf glpi-*.tgz -C /var/www/glpi --strip-components 1
-chown -R www-data:www-data /var/www/glpi
+sudo tar -xzf glpi-*.tgz -C /var/www/glpi --strip-components 1
+sudo chown -R www-data:www-data /var/www/glpi/
+sudo chown -R www-data:www-data /etc/glpi/
+sudo chown -R www-data:www-data /var/lib/glpi/
+sudo mkdir -p /var/log/glpi/
+sudo chown -R www-data:www-data /var/log/glpi/
+sudo nano /etc/glpi/local_define.php
+sudo nano /var/www/glpi/install/.htaccess
+sudo nano /etc/apache2/sites-available/glpi.conf
+---
+<VirtualHost *:8080>
+    Define root_domain glpi.workgroup
+    Define root_path /var/www/glpi
+
+    ServerName ${root_domain}
+    DocumentRoot ${root_path}
+</VirtualHost>
+---
+<VirtualHost *:8080>
+  ServerName glpi.workgroup
+  DocumentRoot /var/www/glpi
+  <Directory /var/www/glpi>
+    Options Indexes FollowSymLinks MultiViews
+    AllowOverride All
+    Order allow,deny
+    allow from all
+    AuthType Basic
+  </Directory>
+  LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-agent}i\"" combined
+  CustomLog ${APACHE_LOG_DIR}/glpi_access.log combined
+  ErrorLog ${APACHE_LOG_DIR}/glpi_error.log
+</VirtualHost>
+---
+sudo a2ensite glpi
+sudo service apache2 reload
 Настройка из веб
 sudo rm -f /var/www/glpi/install/install.php
 crontab -e
