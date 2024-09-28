@@ -104,3 +104,8 @@ sudo nano /var/www/glpi/install/.htaccess
 </IfModule>
 ErrorDocument 403 "<p><b>Restricted area.</b><br />Only local access allowed.<br />Check your configuration or contact your administrator.</p>"
 ---
+glpi/glpi admin account,
+tech/tech technical account,
+normal/normal “normal” account,
+post-only/postonly post-only account.
+
