@@ -14,3 +14,14 @@ deb-src http://deb.debian.org/debian/ bookworm-updates main contrib non-free non
 sudo apt update
 sudo apt install mc ssh curl wget git aptitude htop iftop nmon unrar unzip mc ssh fail2ban \
   apt-transport-https ca-certificates gnupg-agent software-properties-common ufw tree
+
+ssh-keygen -t ed25519 -C "your_email@example.com"
+
+ssh-copy-id user@192.168.0.8
+#ssh user@192.168.0.8 mkdir -p /home/user/.ssh/
+#scp C:\Users\user\.ssh\id_ed25519.pub user@192.168.0.8:/home/user/.ssh/authorized_keys
+
+sudo ufw allow OpenSSH && sudo ufw logging medium
+sudo ufw enable
+sudo nano /etc/ssh/sshd_config
+# раскомментировать PasswordAuthentication no
