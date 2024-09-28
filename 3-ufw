@@ -1,0 +1,7 @@
+sudo apt install ufw
+sudo ufw status verbose
+sudo ufw enable
+-
+sudo ufw app info "WWW Full"
+sudo ufw allow in "WWW Full"
+-
