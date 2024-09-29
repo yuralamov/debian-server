@@ -1,6 +1,6 @@
 sudo apt install tar wget chrony
 sudo timedatectl set-timezone Europe/Moscow
-sudo apt install php php-gd php-ldap php-mbstring php-dom php-fileinfo php-simplexml php-xmlreader php-xmlwriter php-curl php-intl php-mysqli php-bz2 php-zip bzip2 php-pear php-apcu php-xmlrpc
+sudo apt install libapache2-mod-php php-mcrypt php-mysql php-bcmath php-xml php-ldap php-json php php-gd php-ldap php-mbstring php-dom php-fileinfo php-simplexml php-xmlreader php-xmlwriter php-curl php-intl php-mysqli php-bz2 php-zip bzip2 php-pear php-apcu php-xmlrpc
 sudo nano /etc/php/8.2/apache2/php.ini
 upload_max_filesize = 256M
 ...
