@@ -1,7 +1,7 @@
 wget https://repo.zabbix.com/zabbix/7.0/debian/pool/main/z/zabbix-release/zabbix-release_7.0-2+debian12_all.deb
 sudo dpkg -i zabbix-release_7.0-2+debian12_all.deb
 sudo apt update && sudo apt upgrade -y
-sudo apt-get install php libapache2-mod-php php-mcrypt php-mysql
+sudo apt-get install php libapache2-mod-php php-mcrypt php-mysql php-zip php-gd php-bcmath php-mbstring php-xml php-ldap php-json
 sudo nano /etc/apache2/mods-enabled/dir.conf
 <IfModule mod_dir.c>
     DirectoryIndex index.php ....
@@ -13,7 +13,7 @@ sudo nano /var/www/html/info.php
 <?php
 phpinfo();
 ?>
-sudo apt install zabbix-server-mysql zabbix-frontend-php zabbix-apache-conf zabbix-sql-scripts zabbix-agent php-zip php-gd php-bcmath php-mbstring php-xml php-ldap php-json
+sudo apt install zabbix-server-mysql zabbix-frontend-php zabbix-apache-conf zabbix-sql-scripts zabbix-agent
 mysql -uroot -p
 mysql> create database zabbix character set utf8mb4 collate utf8mb4_bin;
 mysql> create user zabbix@localhost identified by 'Zabbix@123';
