@@ -13,7 +13,7 @@ sudo nano /var/www/html/info.php
 <?php
 phpinfo();
 ?>
-sudo apt install zabbix-server-mysql zabbix-frontend-php zabbix-apache-conf zabbix-sql-scripts zabbix-agent php-zip
+sudo apt install zabbix-server-mysql zabbix-frontend-php zabbix-apache-conf zabbix-sql-scripts zabbix-agent php-zip php-gd php-bcmath php-mbstring php-xml php-ldap php-json
 mysql -uroot -p
 mysql> create database zabbix character set utf8mb4 collate utf8mb4_bin;
 mysql> create user zabbix@localhost identified by 'Zabbix@123';
@@ -36,7 +36,6 @@ php_value max_input_vars 10000
 php_value always_populate_raw_post_data -1
 php_value date.timezone Europe/Moscow
 sudo apt install zabbix-java-gateway
-sudo apt install php-gd php-bcmath php-mbstring php-xml php-ldap php-json
 
 sudo systemctl restart zabbix-server zabbix-agent apache2
 sudo systemctl enable zabbix-server zabbix-agent apache2
